@@ -1,20 +1,20 @@
 import {
   Injectable,
   NestMiddleware,
-  Logger,
 } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
+import { LoggerService } from './logger.service';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
-  private readonly logger = new Logger(LoggingMiddleware.name);
+  constructor(private readonly logger: LoggerService) {}
 
   use(req: Request, res: Response, next: NextFunction) {
     const { method, originalUrl, ip } = req;
     const userAgent = req.get('user-agent') || '';
     const startTime = Date.now();
 
-    // Log the request
+    // Log request
     this.logger.log(`Incoming ${method} ${originalUrl}`, 'HTTP');
 
     // Add custom headers for tracking
@@ -26,7 +26,7 @@ export class LoggingMiddleware implements NestMiddleware {
       const { statusCode } = res;
       const responseTime = Date.now() - startTime;
 
-      // Log the request/response cycle
+      // Log request/response cycle
       this.logger.log(`${method} ${originalUrl} ${statusCode} (${responseTime}ms)`, 'HTTP');
 
       // Log slow requests (>1s)
@@ -36,8 +36,11 @@ export class LoggingMiddleware implements NestMiddleware {
 
       // Log 4xx and 5xx errors
       if (statusCode >= 400) {
-        const level = statusCode >= 500 ? 'error' : 'warn';
-        this.logger[level](`${method} ${originalUrl} - ${statusCode}`, 'HTTP');
+        if (statusCode >= 500) {
+          this.logger.error(`${method} ${originalUrl} - ${statusCode}`, undefined, 'HTTP');
+        } else {
+          this.logger.warn(`${method} ${originalUrl} - ${statusCode}`, 'HTTP');
+        }
       }
     });
 

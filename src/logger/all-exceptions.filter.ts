@@ -7,27 +7,26 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CustomLogger } from './winston-logger.util';
 import { LoggerService } from './logger.service';
 import * as Sentry from "@sentry/node";
 
 @Catch()
 @Injectable()
 export class AllExceptionsFilter implements ExceptionFilter {
+  constructor(private readonly logger: LoggerService) {}
+
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-
-    const customLogger = new CustomLogger(new LoggerService());
 
     // Handle HTTP exceptions
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const exceptionResponse = exception.getResponse();
 
-      // Log the HTTP exception
-      customLogger.logError(exception as Error, 'HttpException', {
+      // Log HTTP exception
+      this.logger.logError(exception as Error, 'HttpException', {
         statusCode: status,
         path: request.url,
         method: request.method,
@@ -68,8 +67,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
         ? HttpStatus.NOT_FOUND
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    // Log the exception
-    customLogger.logError(exception as Error, 'UnhandledException', {
+    // Log exception
+    this.logger.logError(exception as Error, 'UnhandledException', {
       statusCode: status,
       path: request.url,
       method: request.method,

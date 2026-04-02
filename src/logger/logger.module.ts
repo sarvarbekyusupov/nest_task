@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { WinstonModule } from 'nest-winston';
 import { LoggerService } from './logger.service';
+import { AllExceptionsFilter } from './all-exceptions.filter';
+import { LoggingMiddleware } from './logging.middleware';
 
 @Module({
-  imports: [WinstonModule],
-  providers: [LoggerService],
-  exports: [LoggerService],
+  providers: [LoggerService, AllExceptionsFilter, LoggingMiddleware],
+  exports: [LoggerService, AllExceptionsFilter, LoggingMiddleware],
 })
 export class LoggerModule {}

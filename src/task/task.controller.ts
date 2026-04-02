@@ -34,15 +34,7 @@ export class TaskController {
   @ApiOperation({ summary: 'Get all tasks with pagination and filtering' })
   @ApiResponse({ status: 200, description: 'Tasks retrieved successfully', type: Object })
   findAll(@Query() query: FindTasksDto) {
-    let completedFilter: boolean | undefined;
-    if (query.completed !== undefined) {
-      if (typeof query.completed === 'string') {
-        completedFilter = query.completed === 'true';
-      } else {
-        completedFilter = query.completed;
-      }
-    }
-    return this.taskService.findAll(query.page, query.limit, completedFilter, query.search);
+    return this.taskService.findAll(query.page, query.limit, query.completed, query.search);
   }
 
   @Get(":id")

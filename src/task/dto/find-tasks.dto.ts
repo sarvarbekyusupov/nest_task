@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsInt, Min } from "class-validator";
+import { IsOptional, IsString, IsInt, IsBoolean, Min } from "class-validator";
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 
@@ -30,7 +30,9 @@ export class FindTasksDto {
     example: false
   })
   @IsOptional()
-  completed?: string | boolean;
+  @IsBoolean()
+  @Type(() => Boolean)
+  completed?: boolean;
 
   @ApiPropertyOptional({
     description: 'Search in title and description',

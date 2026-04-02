@@ -1,14 +1,12 @@
 // Logger service for Winston logging
-import { Injectable, Logger as NestLogger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as winston from 'winston';
 
 @Injectable()
-export class LoggerService extends NestLogger {
+export class LoggerService {
   private logger: winston.Logger;
 
   constructor() {
-    super();
-
     this.logger = winston.createLogger({
       level: process.env.LOG_LEVEL || 'info',
       format: winston.format.combine(

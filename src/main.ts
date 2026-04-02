@@ -25,6 +25,7 @@ async function start() {
     .addBearerAuth()
     .addTag('auth', 'Authentication endpoints')
     .addTag('tasks', 'Task management endpoints')
+    .addTag('files', 'File management endpoints')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

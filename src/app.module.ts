@@ -7,6 +7,7 @@ import { AllExceptionsFilter } from "./logger/all-exceptions.filter";
 import { SentryModule } from "@sentry/nestjs/setup";
 import { CommonModule } from "./common/common.module";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
+import { S3Module } from "./s3/s3.module";
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ResponseInterceptor } from "./common/interceptors/response.interceptor"
       process.env.MONGODB_URI || "mongodb://localhost:27017/danads",
     ),
     TaskModule,
+    S3Module,
   ],
   controllers: [],
   providers: [
