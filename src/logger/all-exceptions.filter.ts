@@ -5,9 +5,9 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { LoggerService } from './logger.service';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { LoggerService } from "./logger.service";
 import * as Sentry from "@sentry/node";
 
 @Catch()
@@ -26,21 +26,21 @@ export class AllExceptionsFilter implements ExceptionFilter {
       const exceptionResponse = exception.getResponse();
 
       // Log HTTP exception
-      this.logger.logError(exception as Error, 'HttpException', {
+      this.logger.logError(exception as Error, "HttpException", {
         statusCode: status,
         path: request.url,
         method: request.method,
-        requestId: request['requestId'],
+        requestId: request["requestId"],
       });
 
       // Send to Sentry
       Sentry.withScope((scope) => {
-        scope.setLevel('error');
-        scope.setContext('http', {
+        scope.setLevel("error");
+        scope.setContext("http", {
           url: request.url,
           method: request.method,
           statusCode: status,
-          requestId: request['requestId'],
+          requestId: request["requestId"],
         });
         Sentry.captureException(exception);
       });
@@ -51,11 +51,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
         timestamp: new Date().toISOString(),
         path: request.url,
         method: request.method,
-        message: typeof exceptionResponse === 'string'
-          ? exceptionResponse
-          : (exceptionResponse as any).message,
+        message:
+          typeof exceptionResponse === "string"
+            ? exceptionResponse
+            : (exceptionResponse as any).message,
         error: exception.message,
-        requestId: request['requestId'],
+        requestId: request["requestId"],
       });
 
       return;
@@ -63,27 +64,27 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     // Handle all other exceptions
     const status =
-      exception instanceof Error && (exception as any).code === 'ENOENT'
+      exception instanceof Error && (exception as any).code === "ENOENT"
         ? HttpStatus.NOT_FOUND
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     // Log exception
-    this.logger.logError(exception as Error, 'UnhandledException', {
+    this.logger.logError(exception as Error, "UnhandledException", {
       statusCode: status,
       path: request.url,
       method: request.method,
-      requestId: request['requestId'],
+      requestId: request["requestId"],
       stack: (exception as Error).stack,
     });
 
     // Send to Sentry
     Sentry.withScope((scope) => {
-      scope.setLevel('error');
-      scope.setContext('http', {
+      scope.setLevel("error");
+      scope.setContext("http", {
         url: request.url,
         method: request.method,
         statusCode: status,
-        requestId: request['requestId'],
+        requestId: request["requestId"],
       });
       Sentry.captureException(exception);
     });
@@ -97,10 +98,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
       message:
         exception instanceof Error
           ? exception.message
-          : 'Internal server error',
-      error: exception instanceof Error ? exception.message : 'Unknown error',
-      requestId: request['requestId'],
-      stack: process.env.NODE_ENV === 'development' && exception instanceof Error ? exception.stack : undefined,
+          : "Internal server error",
+      error: exception instanceof Error ? exception.message : "Unknown error",
+      requestId: request["requestId"],
+      stack:
+        process.env.NODE_ENV === "development" && exception instanceof Error
+          ? exception.stack
+          : undefined,
     });
   }
 }

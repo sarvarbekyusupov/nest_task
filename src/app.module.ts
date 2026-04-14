@@ -8,6 +8,7 @@ import { SentryModule } from "@sentry/nestjs/setup";
 import { CommonModule } from "./common/common.module";
 import { ResponseInterceptor } from "./common/interceptors/response.interceptor";
 import { S3Module } from "./s3/s3.module";
+import { DynamoDBModule } from "./dynamodb/dynamodb.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { S3Module } from "./s3/s3.module";
     ),
     TaskModule,
     S3Module,
+    DynamoDBModule,
   ],
   controllers: [],
   providers: [

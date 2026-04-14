@@ -1,6 +1,6 @@
 // Logger service for Winston logging
-import { Injectable } from '@nestjs/common';
-import * as winston from 'winston';
+import { Injectable } from "@nestjs/common";
+import * as winston from "winston";
 
 @Injectable()
 export class LoggerService {
@@ -8,16 +8,14 @@ export class LoggerService {
 
   constructor() {
     this.logger = winston.createLogger({
-      level: process.env.LOG_LEVEL || 'info',
+      level: process.env.LOG_LEVEL || "info",
       format: winston.format.combine(
-        winston.format.timestamp({ format: 'HH:mm:ss' }),
+        winston.format.timestamp({ format: "HH:mm:ss" }),
         winston.format.printf(({ timestamp, level, message, context }) => {
-          return `${timestamp} [${context || 'Application'}] ${message}`;
+          return `${timestamp} [${context || "Application"}] ${message}`;
         }),
       ),
-      transports: [
-        new winston.transports.Console(),
-      ],
+      transports: [new winston.transports.Console()],
     });
   }
 
@@ -42,13 +40,20 @@ export class LoggerService {
   }
 
   // Custom methods for better context handling
-  logRequest(method: string, url: string, statusCode: number, responseTime: number) {
-    this.logger.info(`${method} ${url} ${statusCode} (${responseTime}ms)`, { context: 'HTTP' });
+  logRequest(
+    method: string,
+    url: string,
+    statusCode: number,
+    responseTime: number,
+  ) {
+    this.logger.info(`${method} ${url} ${statusCode} (${responseTime}ms)`, {
+      context: "HTTP",
+    });
   }
 
   logError(error: Error, context?: string, additionalInfo?: any) {
     this.logger.error(error.message, {
-      context: context || 'Error',
+      context: context || "Error",
       stack: error.stack,
       ...additionalInfo,
     });
@@ -56,24 +61,36 @@ export class LoggerService {
 
   logAuthAttempt(username: string, success: boolean, ip: string) {
     if (success) {
-      this.logger.info(`User login successful`, { context: 'Auth', username, ip });
+      this.logger.info(`User login successful`, {
+        context: "Auth",
+        username,
+        ip,
+      });
     } else {
-      this.logger.warn(`Failed login attempt`, { context: 'Auth', username, ip });
+      this.logger.warn(`Failed login attempt`, {
+        context: "Auth",
+        username,
+        ip,
+      });
     }
   }
 
   logDatabaseQuery(query: string, time: number) {
     if (time > 1000) {
-      this.logger.warn(`Slow database query: ${query} (${time}ms)`, { context: 'Database' });
+      this.logger.warn(`Slow database query: ${query} (${time}ms)`, {
+        context: "Database",
+      });
     } else {
-      this.logger.debug(`Database query: ${query} (${time}ms)`, { context: 'Database' });
+      this.logger.debug(`Database query: ${query} (${time}ms)`, {
+        context: "Database",
+      });
     }
   }
 
   logPerformance(operation: string, duration: number, metadata?: any) {
-    const level = duration > 1000 ? 'warn' : duration > 500 ? 'info' : 'debug';
+    const level = duration > 1000 ? "warn" : duration > 500 ? "info" : "debug";
     this.logger[level](`${operation} completed (${duration}ms)`, {
-      context: 'Performance',
+      context: "Performance",
       ...metadata,
     });
   }

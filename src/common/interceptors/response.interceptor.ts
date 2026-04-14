@@ -3,9 +3,9 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+} from "@nestjs/common";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
 export interface Response<T> {
   success: boolean;
@@ -15,9 +15,7 @@ export interface Response<T> {
 }
 
 @Injectable()
-export class ResponseInterceptor<T>
-  implements NestInterceptor<T, Response<T>>
-{
+export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
   intercept(
     context: ExecutionContext,
     next: CallHandler,
@@ -36,9 +34,9 @@ export class ResponseInterceptor<T>
   }
 
   private getMessage(statusCode: number): string {
-    if (statusCode >= 200 && statusCode < 300) return 'Success';
-    if (statusCode >= 400 && statusCode < 500) return 'Client Error';
-    if (statusCode >= 500) return 'Server Error';
-    return 'Unknown';
+    if (statusCode >= 200 && statusCode < 300) return "Success";
+    if (statusCode >= 400 && statusCode < 500) return "Client Error";
+    if (statusCode >= 500) return "Server Error";
+    return "Unknown";
   }
 }

@@ -5,7 +5,7 @@ import { ApiPropertyOptional } from "@nestjs/swagger";
 export class ListFilesDto {
   @ApiPropertyOptional({
     description: "Prefix to filter files by",
-    example: "uploads/2024/04"
+    example: "uploads/2024/04",
   })
   @IsOptional()
   @IsString()
@@ -26,7 +26,7 @@ export class ListFilesDto {
 
   @ApiPropertyOptional({
     description: "Continuation token for pagination",
-    example: "eyJjb250aW51YXRpb24tdG9rZW4iOiAiZXlKaGJHY2lPaUpTV..."
+    example: "eyJjb250aW51YXRpb24tdG9rZW4iOiAiZXlKaGJHY2lPaUpTV...",
   })
   @IsOptional()
   @IsString()

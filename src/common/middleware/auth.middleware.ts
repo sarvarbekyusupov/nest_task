@@ -1,5 +1,5 @@
-import { Injectable, NestMiddleware, Logger } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
+import { Injectable, NestMiddleware, Logger } from "@nestjs/common";
+import { Request, Response, NextFunction } from "express";
 
 /**
  * Simple authentication middleware that extracts user info from headers
@@ -14,11 +14,11 @@ export class AuthMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     // Example: Extract user ID from a custom header or JWT token
-    const userId = req.headers['x-user-id'] as string;
+    const userId = req.headers["x-user-id"] as string;
 
     if (userId) {
       // Attach user information to the request
-      req['user'] = {
+      req["user"] = {
         userId: userId,
         timestamp: new Date().toISOString(),
       };

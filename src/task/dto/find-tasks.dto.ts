@@ -4,9 +4,9 @@ import { Type } from "class-transformer";
 
 export class FindTasksDto {
   @ApiPropertyOptional({
-    description: 'Page number for pagination',
+    description: "Page number for pagination",
     example: 1,
-    default: 1
+    default: 1,
   })
   @IsOptional()
   @Type(() => Number)
@@ -15,9 +15,9 @@ export class FindTasksDto {
   page?: number = 1;
 
   @ApiPropertyOptional({
-    description: 'Number of items per page',
+    description: "Number of items per page",
     example: 10,
-    default: 10
+    default: 10,
   })
   @IsOptional()
   @Type(() => Number)
@@ -26,8 +26,8 @@ export class FindTasksDto {
   limit?: number = 10;
 
   @ApiPropertyOptional({
-    description: 'Filter by completion status',
-    example: false
+    description: "Filter by completion status",
+    example: false,
   })
   @IsOptional()
   @IsBoolean()
@@ -35,8 +35,8 @@ export class FindTasksDto {
   completed?: boolean;
 
   @ApiPropertyOptional({
-    description: 'Search in title and description',
-    example: 'documentation'
+    description: "Search in title and description",
+    example: "documentation",
   })
   @IsOptional()
   @IsString()

@@ -39,11 +39,21 @@ export class S3Service {
     "video/webm",
   ];
   private readonly allowedExtensions = [
-    ".jpg", ".jpeg", ".png", ".gif", ".webp",
-    ".mp4", ".mov", ".avi", ".webm"
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".webp",
+    ".mp4",
+    ".mov",
+    ".avi",
+    ".webm",
   ];
 
-  constructor(private readonly logger: LoggerService, private readonly s3Config: S3Config) {
+  constructor(
+    private readonly logger: LoggerService,
+    private readonly s3Config: S3Config,
+  ) {
     this.s3Client = s3Config.getClient();
     this.bucketName = s3Config.getBucketName();
     this.maxFileSize = s3Config.getMaxFileSize();
@@ -55,20 +65,20 @@ export class S3Service {
       const startTime = Date.now();
       this.logger.debug(
         `Uploading file: ${file.originalname} (${(file.size / 1024 / 1024).toFixed(2)}MB)`,
-        "S3Service"
+        "S3Service",
       );
 
       // Validate file size
       if (file.size > this.maxFileSize) {
         throw new BadRequestException(
-          `File size exceeds maximum allowed size of ${(this.maxFileSize / 1024 / 1024).toFixed(2)}MB`
+          `File size exceeds maximum allowed size of ${(this.maxFileSize / 1024 / 1024).toFixed(2)}MB`,
         );
       }
 
       // Validate file type
       if (!this.isValidFileType(file)) {
         throw new BadRequestException(
-          `Invalid file type. Allowed types: images (jpg, jpeg, png, gif, webp) and videos (mp4, mov, avi, webm)`
+          `Invalid file type. Allowed types: images (jpg, jpeg, png, gif, webp) and videos (mp4, mov, avi, webm)`,
         );
       }
 
@@ -107,7 +117,10 @@ export class S3Service {
       return metadata;
     } catch (error) {
       if (error instanceof BadRequestException) {
-        this.logger.warn(`File validation failed: ${file.originalname}`, "S3Service");
+        this.logger.warn(
+          `File validation failed: ${file.originalname}`,
+          "S3Service",
+        );
         throw error;
       }
 
@@ -116,12 +129,15 @@ export class S3Service {
         fileName: file.originalname,
       });
       throw new BadRequestException(
-        `Failed to upload file: ${(error as Error).message}`
+        `Failed to upload file: ${(error as Error).message}`,
       );
     }
   }
 
-  async getSignedUrl(key: string, expiresIn: number = this.signedUrlExpiry): Promise<string> {
+  async getSignedUrl(
+    key: string,
+    expiresIn: number = this.signedUrlExpiry,
+  ): Promise<string> {
     try {
       const startTime = Date.now();
       this.logger.debug(`Generating signed URL for key: ${key}`, "S3Service");
@@ -138,7 +154,7 @@ export class S3Service {
         key,
       });
       throw new BadRequestException(
-        `Failed to generate signed URL: ${(error as Error).message}`
+        `Failed to generate signed URL: ${(error as Error).message}`,
       );
     }
   }
@@ -146,13 +162,13 @@ export class S3Service {
   async listFiles(
     prefix?: string,
     maxKeys?: number,
-    continuationToken?: string
+    continuationToken?: string,
   ): Promise<{ files: FileMetadata[]; continuationToken?: string }> {
     try {
       const startTime = Date.now();
       this.logger.debug(
         `Listing files: prefix=${prefix}, maxKeys=${maxKeys}`,
-        "S3Service"
+        "S3Service",
       );
 
       const command = new ListObjectsV2Command({
@@ -201,7 +217,7 @@ export class S3Service {
         maxKeys,
       });
       throw new BadRequestException(
-        `Failed to list files: ${(error as Error).message}`
+        `Failed to list files: ${(error as Error).message}`,
       );
     }
   }
@@ -224,7 +240,7 @@ export class S3Service {
         key,
       });
       throw new BadRequestException(
-        `Failed to delete file: ${(error as Error).message}`
+        `Failed to delete file: ${(error as Error).message}`,
       );
     }
   }
@@ -269,12 +285,15 @@ export class S3Service {
         key,
       });
       throw new BadRequestException(
-        `Failed to get file metadata: ${(error as Error).message}`
+        `Failed to get file metadata: ${(error as Error).message}`,
       );
     }
   }
 
-  private async generateSignedUrl(key: string, expiresIn?: number): Promise<string> {
+  private async generateSignedUrl(
+    key: string,
+    expiresIn?: number,
+  ): Promise<string> {
     const command = new GetObjectCommand({
       Bucket: this.bucketName,
       Key: key,

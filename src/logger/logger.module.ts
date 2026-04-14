@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { LoggerService } from './logger.service';
-import { AllExceptionsFilter } from './all-exceptions.filter';
-import { LoggingMiddleware } from './logging.middleware';
+import { Module } from "@nestjs/common";
+import { LoggerService } from "./logger.service";
+import { AllExceptionsFilter } from "./all-exceptions.filter";
+import { LoggingMiddleware } from "./logging.middleware";
 
 @Module({
   providers: [LoggerService, AllExceptionsFilter, LoggingMiddleware],
